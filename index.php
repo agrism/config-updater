@@ -271,20 +271,45 @@ HTML;
 
 $data = [
 	new Regions('/Users/UUU/Pay Later Group/micro-services/mobile/.env', 'REGION_ID', 'mobile'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/mobile/.env', 'DEFAULT_JURISDICTION', 'mobile'),
+
 	new Regions('/Users/UUU/Pay Later Group/micro-services/accounts/.env', 'REGION_ID', 'accounts'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/accounts/.env', 'DEFAULT_JURISDICTION', 'accounts'),
+
 	new Regions('/Users/UUU/Pay Later Group/micro-services/documents/.env', 'REGION_ID', 'documents'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/documents/.env', 'DEFAULT_JURISDICTION', 'documents'),
+
 	new Regions('/Users/UUU/Pay Later Group/micro-services/address/.env', 'REGION_ID', 'address'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/address/.env', 'DEFAULT_JURISDICTION', 'address'),
+
 	new Regions('/Users/UUU/Pay Later Group/micro-services/payments/.env', 'REGION_ID', 'payments'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/payments/.env', 'DEFAULT_JURISDICTION', 'payments'),
+
 	new Regions('/Users/UUU/Pay Later Group/micro-services/merchant/.env', 'REGION_ID', 'merchant'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/merchant/.env', 'DEFAULT_JURISDICTION', 'merchant'),
+
 	new Regions('/Users/UUU/Pay Later Group/micro-services/merchant-portal/.env', 'REGION_ID', 'merchant-portal'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/merchant-portal/.env', 'DEFAULT_JURISDICTION', 'merchant-portal'),
+
 	new Regions('/Users/UUU/Pay Later Group/micro-services/customer-portal/.env', 'REGION_ID', 'customer-portal'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/customer-portal/.env', 'DEFAULT_JURISDICTION', 'customer-portal'),
+
 	new Regions('/Users/UUU/Pay Later Group/micro-services/communications/.env', 'REGION_ID', 'communications'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/communications/.env', 'DEFAULT_JURISDICTION', 'communications'),
+
 	new Regions('/Users/UUU/Pay Later Group/micro-service-manager/.env', 'REGION_ID', 'micro-service-manager'),
+	new Regions('/Users/UUU/Pay Later Group/micro-service-manager/.env', 'DEFAULT_JURISDICTION', 'micro-service-manager'),
+
 	new Regions('/Users/UUU/Pay Later Group/micro-services/external-service/.env', 'REGION_ID', 'external-service'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/external-service/.env', 'DEFAULT_JURISDICTION', 'external-service'),
+
 	new Regions('/Users/UUU/Pay Later Group/legacy/Admin/.config', 'region.id', 'admin'),
+
 	new Regions('/Users/UUU/Pay Later Group/legacy/LMP/.config', 'region.id', 'lmp'),
-	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env', 'REGION_ID',
-		'CLL'),
+
+	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env', 'REGION_ID','CLL'),
+	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env', 'DEFAULT_JURISDICTION','CLL'),
+	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env', 'FNPL_REGION_COUNTRY_CODE','CLL'),
 ];
 
 
