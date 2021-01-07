@@ -2,14 +2,14 @@
 
 class Styles
 {
-    public static function factory(): self
-    {
-        return new self;
-    }
+	public static function factory(): self
+	{
+		return new self;
+	}
 
-    public function render()
-    {
-        echo <<<HTML
+	public function render()
+	{
+		echo <<<HTML
 		<style>
 			table {border-collapse: collapse;}
 			table, th, td {border: 1px solid black;}
@@ -35,263 +35,263 @@ class Styles
 			}
 		</style>
 HTML;
-    }
+	}
 }
 
 class Regions
 {
-    private $path = '';
-    private $key = '';
-    private $projectName = '';
+	private $path = '';
+	private $key = '';
+	private $projectName = '';
 
-    private $value = '';
+	private $value = '';
 
-    public function __construct($path, $key, $projectName)
-    {
-        $this->path = $path;
-        $this->key = $key;
-        $this->projectName = $projectName;
-    }
+	public function __construct($path, $key, $projectName)
+	{
+		$this->path = $path;
+		$this->key = $key;
+		$this->projectName = $projectName;
+	}
 
-    /**
-     * @return string
-     */
-    public function getPath()
-    {
-        $user = exec('whoami');
-        return str_replace('UUU', $user, $this->path);
-    }
+	/**
+	 * @return string
+	 */
+	public function getPath()
+	{
+		$user = exec('whoami');
+		return str_replace('UUU', $user, $this->path);
+	}
 
-    /**
-     * @return string
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
+	/**
+	 * @return string
+	 */
+	public function getKey()
+	{
+		return $this->key;
+	}
 
-    /**
-     * @return string
-     */
-    public function getProjectName()
-    {
-        return $this->projectName;
-    }
+	/**
+	 * @return string
+	 */
+	public function getProjectName()
+	{
+		return $this->projectName;
+	}
 
-    public function getValue()
-    {
-        $this->value = '';
+	public function getValue()
+	{
+		$this->value = '';
 
-        $this->readValue();
+		$this->readValue();
 
-        return $this->value;
-    }
+		return $this->value;
+	}
 
 
-    public function readValue()
-    {
-        $cmd = 'cat "' . $this->getPath() . '" |  grep "' . $this->getKey() . '"';
-        $line = exec($cmd);
+	public function readValue()
+	{
+		$cmd = 'cat "'.$this->getPath().'" |  grep "'.$this->getKey().'"';
+		$line = exec($cmd);
 
-        if (strpos($line, '=') !== false) {
-            $exploded = explode('=', $line);
-            $this->value = trim($exploded[1] ?? '');
+		if (strpos($line, '=') !== false) {
+			$exploded = explode('=', $line);
+			$this->value = trim($exploded[1] ?? '');
 
-            return $this->value;
-        }
+			return $this->value;
+		}
 
-        if (strpos($line, ':') !== false) {
-            $exploded = explode(':', $line);
-            $this->value = preg_replace('/["\' ,]/', '', ($exploded[1] ?? ''));
+		if (strpos($line, ':') !== false) {
+			$exploded = explode(':', $line);
+			$this->value = preg_replace('/["\' ,]/', '', ($exploded[1] ?? ''));
 
-            return $this->value;
-        }
+			return $this->value;
+		}
 
-        // widget case with define
-        $matches = null;
-        $pattern = '/define\([\s]*[\'"]' . $this->getKey() . '[\'"][\s]*,[\s]*[\'"]([\w]+)[\'"][\s]*\)/';
-        if (preg_match($pattern, $line, $matches)) {
-            $this->value = $matches[1] ?? '';
+		// widget case with define
+		$matches = null;
+		$pattern = '/define\([\s]*[\'"]'.$this->getKey().'[\'"][\s]*,[\s]*[\'"]([\w]+)[\'"][\s]*\)/';
+		if (preg_match($pattern, $line, $matches)) {
+			$this->value = $matches[1] ?? '';
 
-            return $this->value;
-        }
+			return $this->value;
+		}
 
-        return $line;
-    }
+		return $line;
+	}
 
-    public function updateValue($value = 'US')
-    {
-        if (!$this->getValue()) {
-            $this->readValue();
-        }
+	public function updateValue($value = 'US')
+	{
+		if (!$this->getValue()) {
+			$this->readValue();
+		}
 
-        if ($this->value) {
-            $cmd = 'cat "' . $this->getPath() . '" |  grep "' . $this->getKey() . '"';
+		if ($this->value) {
+			$cmd = 'cat "'.$this->getPath().'" |  grep "'.$this->getKey().'"';
 
-            $line = exec($cmd);
+			$line = exec($cmd);
 
-            if (strpos($line, '=') !== false) {
-                $exploded = explode('=', $line);
+			if (strpos($line, '=') !== false) {
+				$exploded = explode('=', $line);
 
-                $countOfReplacement = 0;
+				$countOfReplacement = 0;
 
-                $exploded[1] = str_replace($this->value, $value, $exploded[1], $countOfReplacement);
+				$exploded[1] = str_replace($this->value, $value, $exploded[1], $countOfReplacement);
 
-                if ($countOfReplacement !== 1) {
-                    throw new Exception('Replacement count not 1 (#1): ' . strval($countOfReplacement));
-                }
+				if ($countOfReplacement !== 1) {
+					throw new Exception('Replacement count not 1 (#1): '.strval($countOfReplacement));
+				}
 
-                $newLine = implode('=', $exploded);
+				$newLine = implode('=', $exploded);
 
-                $cmdUpdate = 'sed -i "" "s/' . $line . '/' . $newLine . '/" "' . $this->getPath() . '"';
+				$cmdUpdate = 'sed -i "" "s/'.$line.'/'.$newLine.'/" "'.$this->getPath().'"';
 
-                $r = exec($cmdUpdate);
+				$r = exec($cmdUpdate);
 
-                return;
-            }
+				return;
+			}
 
-            if (strpos($line, ':') !== false) {
-                $exploded = explode(':', $line);
+			if (strpos($line, ':') !== false) {
+				$exploded = explode(':', $line);
 
-                $countOfReplacement = 0;
+				$countOfReplacement = 0;
 
-                $exploded[1] = str_replace($this->value, $value, $exploded[1], $countOfReplacement);
+				$exploded[1] = str_replace($this->value, $value, $exploded[1], $countOfReplacement);
 
-                if ($countOfReplacement !== 1) {
-                    throw new Exception('Replacement count not 1 (#2): ' . strval($countOfReplacement));
-                }
+				if ($countOfReplacement !== 1) {
+					throw new Exception('Replacement count not 1 (#2): '.strval($countOfReplacement));
+				}
 
-                $newLine = implode(':', $exploded);
+				$newLine = implode(':', $exploded);
 
-                $cmdUpdate = 'sed -i \'\' \'s/' . $line . '/' . $newLine . '/\' \'' . $this->getPath() . '\'';
+				$cmdUpdate = 'sed -i \'\' \'s/'.$line.'/'.$newLine.'/\' \''.$this->getPath().'\'';
 
-                exec($cmdUpdate);
+				exec($cmdUpdate);
 
-                return $this->value;
-            }
+				return $this->value;
+			}
 
-            // widget case with define
-            $pattern = '/define\([\s]*[\'"]' . $this->getKey() . '[\'"][\s]*,[\s]*[\'"]([\w]+)[\'"][\s]*\)/';
-            if (preg_match($pattern, $line, $matches)) {
-                $this->value = $matches[1];
+			// widget case with define
+			$pattern = '/define\([\s]*[\'"]'.$this->getKey().'[\'"][\s]*,[\s]*[\'"]([\w]+)[\'"][\s]*\)/';
+			if (preg_match($pattern, $line, $matches)) {
+				$this->value = $matches[1];
 
-                $newLine = preg_replace($pattern, 'define(\'' . $this->getKey() . '\', \'' . $value . '\')', $line, -1);
+				$newLine = preg_replace($pattern, 'define(\''.$this->getKey().'\', \''.$value.'\')', $line, -1);
 
-                $cmdUpdate = 'sed -i \'\' "s/' . $line . '/' . $newLine . '/" \'' . $this->getPath() . '\'';
+				$cmdUpdate = 'sed -i \'\' "s/'.$line.'/'.$newLine.'/" \''.$this->getPath().'\'';
 
-                exec($cmdUpdate);
+				exec($cmdUpdate);
 
-                return $this->value;
-            }
-        }
-    }
+				return $this->value;
+			}
+		}
+	}
 
-    public function export()
-    {
-        return [
-            'project' => $this->getProjectName(),
-            'key' => $this->getKey(),
-            'path' => $this->getPath(),
-            'value' => $this->getValue(),
-        ];
-    }
+	public function export()
+	{
+		return [
+			'project' => $this->getProjectName(),
+			'key' => $this->getKey(),
+			'path' => $this->getPath(),
+			'value' => $this->getValue(),
+		];
+	}
 }
 
 class Table
 {
-    private $data = [];
+	private $data = [];
 
-    private static $isStylesRendered = false;
+	private static $isStylesRendered = false;
 
-    /**
-     * Table constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        $this->data = $data;
-    }
+	/**
+	 * Table constructor.
+	 * @param  array  $data
+	 */
+	public function __construct(array $data = [])
+	{
+		$this->data = $data;
+	}
 
-    public static function factory(array $data = [])
-    {
-        return new self($data);
-    }
+	public static function factory(array $data = [])
+	{
+		return new self($data);
+	}
 
-    public function render()
-    {
-        if (!self::$isStylesRendered) {
+	public function render()
+	{
+		if (!self::$isStylesRendered) {
 
 //			echo '<pre>';
-            self::$isStylesRendered = true;
-        }
+			self::$isStylesRendered = true;
+		}
 
-        foreach ($this->data as $index => $row) {
-            if ($index === 0) {
-                echo '<table><tr>';
-                echo $this->renderCell('O/n');
-                foreach (array_keys($row) as $title) {
-                    echo $this->renderCell($title, true);
-                }
-                echo '</tr>';
-            }
-            echo '<tr>';
-            echo $this->renderCell($index + 1);
-            foreach ($row as $item) {
-                echo $this->renderCell($item);
-            }
-            echo '</tr>';
-        }
+		foreach ($this->data as $index => $row) {
+			if ($index === 0) {
+				echo '<table><tr>';
+				echo $this->renderCell('O/n');
+				foreach (array_keys($row) as $title) {
+					echo $this->renderCell($title, true);
+				}
+				echo '</tr>';
+			}
+			echo '<tr>';
+			echo $this->renderCell($index + 1);
+			foreach ($row as $item) {
+				echo $this->renderCell($item);
+			}
+			echo '</tr>';
+		}
 
-        echo '</table>';
-    }
+		echo '</table>';
+	}
 
-    private function renderCell($value, $isHead = false)
-    {
-        if ($isHead) {
-            return "<th>$value</th>";
-        }
-        return "<td>$value</td>";
-    }
+	private function renderCell($value, $isHead = false)
+	{
+		if ($isHead) {
+			return "<th>$value</th>";
+		}
+		return "<td>$value</td>";
+	}
 
-    private function renderRow($data = [])
-    {
-    }
+	private function renderRow($data = [])
+	{
+	}
 }
 
 class Form
 {
-    private $inputs = [];
+	private $inputs = [];
 
-    public static function factory(): self
-    {
-        return new self;
-    }
+	public static function factory(): self
+	{
+		return new self;
+	}
 
-    public function addInput($type = 'text', $name = null, $value = null, $label = null): self
-    {
-        $labelToRender = $label ? $label . ':' : null;
+	public function addInput($type = 'text', $name = null, $value = null, $label = null): self
+	{
+		$labelToRender = $label ? $label.':' : null;
 
-        $value = $_REQUEST[$name] ?? $value;
+		$value = $_REQUEST[$name] ?? $value;
 
-        $this->inputs[] = <<<HTML
+		$this->inputs[] = <<<HTML
 		<div class="row">
 			<label>{$labelToRender}</label>
 			<input type="{$type}" value="{$value}" placeholder="{$label}" name="{$name}" id="{$name}">
 		</div>
 HTML;
 
-        return $this;
+		return $this;
 
-    }
+	}
 
-    public function render()
-    {
-        echo '<form>';
-        foreach ($this->inputs as $input) {
-            echo $input;
-        }
-        echo '</form>';
-    }
+	public function render()
+	{
+		echo '<form>';
+		foreach ($this->inputs as $input) {
+			echo $input;
+		}
+		echo '</form>';
+	}
 }
 
 $data = [
@@ -314,31 +314,39 @@ $data = [
 	new Regions('/Users/UUU/Pay Later Group/micro-services/merchant/.env', 'DEFAULT_JURISDICTION', 'merchant'),
 
 	new Regions('/Users/UUU/Pay Later Group/micro-services/merchant-portal/.env', 'REGION_ID', 'merchant-portal'),
-	new Regions('/Users/UUU/Pay Later Group/micro-services/merchant-portal/.env', 'DEFAULT_JURISDICTION', 'merchant-portal'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/merchant-portal/.env', 'DEFAULT_JURISDICTION',
+		'merchant-portal'),
 
 	new Regions('/Users/UUU/Pay Later Group/micro-services/customer-portal/.env', 'REGION_ID', 'customer-portal'),
-	new Regions('/Users/UUU/Pay Later Group/micro-services/customer-portal/.env', 'DEFAULT_JURISDICTION', 'customer-portal'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/customer-portal/.env', 'DEFAULT_JURISDICTION',
+		'customer-portal'),
 
 	new Regions('/Users/UUU/Pay Later Group/micro-services/communications/.env', 'REGION_ID', 'communications'),
-	new Regions('/Users/UUU/Pay Later Group/micro-services/communications/.env', 'DEFAULT_JURISDICTION', 'communications'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/communications/.env', 'DEFAULT_JURISDICTION',
+		'communications'),
 
 	new Regions('/Users/UUU/Pay Later Group/micro-service-manager/.env', 'REGION_ID', 'micro-service-manager'),
-	new Regions('/Users/UUU/Pay Later Group/micro-service-manager/.env', 'DEFAULT_JURISDICTION', 'micro-service-manager'),
+	new Regions('/Users/UUU/Pay Later Group/micro-service-manager/.env', 'DEFAULT_JURISDICTION',
+		'micro-service-manager'),
 
 	new Regions('/Users/UUU/Pay Later Group/micro-services/external-service/.env', 'REGION_ID', 'external-service'),
-	new Regions('/Users/UUU/Pay Later Group/micro-services/external-service/.env', 'DEFAULT_JURISDICTION', 'external-service'),
+	new Regions('/Users/UUU/Pay Later Group/micro-services/external-service/.env', 'DEFAULT_JURISDICTION',
+		'external-service'),
 
 	new Regions('/Users/UUU/Pay Later Group/legacy/Admin/.config', 'region.id', 'admin'),
 
 	new Regions('/Users/UUU/Pay Later Group/legacy/LMP/.config', 'region.id', 'lmp'),
 
-	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env', 'REGION_ID','CLL'),
-	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env', 'DEFAULT_JURISDICTION','CLL'),
-	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env', 'FNPL_REGION_COUNTRY_CODE','CLL'),
+	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env', 'REGION_ID',
+		'CLL'),
+	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env',
+		'DEFAULT_JURISDICTION', 'CLL'),
+	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env',
+		'FNPL_REGION_COUNTRY_CODE', 'CLL'),
 
-    new Regions('/Users/UUU/Pay Later Group/Micro-Service-Central/.env', 'REGION_ID', 'Central'),
+	new Regions('/Users/UUU/Pay Later Group/Micro-Service-Central/.env', 'REGION_ID', 'Central'),
 
-    new Regions('/Users/UUU/Pay Later Group/application-widget/configuration.php', 'REGION_ID', 'widget'),
+	new Regions('/Users/UUU/Pay Later Group/application-widget/configuration.php', 'REGION_ID', 'widget'),
 
 ];
 
@@ -346,16 +354,16 @@ $data = [
 Styles::factory()->render();
 
 Form::factory()
-    ->addInput('text', 'region', null, 'Region')
-    ->addInput('submit', 'submit', 'submit')
-    ->render();
+	->addInput('text', 'region', null, 'Region')
+	->addInput('submit', 'submit', 'submit')
+	->render();
 
 echo '<div class="line">before:</div>';
 
 $return = [];
 
 foreach ($data as $item) {
-    $return[] = $item->export();
+	$return[] = $item->export();
 }
 
 Table::factory($return)->render();
@@ -366,11 +374,11 @@ $return = [];
 
 foreach ($data as $item) {
 
-    if ($newRegion = ($_REQUEST['region'] ?? null)) {
-        $item->updateValue($newRegion);
-    }
+	if ($newRegion = ($_REQUEST['region'] ?? null)) {
+		$item->updateValue($newRegion);
+	}
 
-    $return[] = $item->export();
+	$return[] = $item->export();
 }
 
 Table::factory($return)->render();
