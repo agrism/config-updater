@@ -337,14 +337,16 @@ $data = [
 
 	new Regions('/Users/UUU/Pay Later Group/legacy/LMP/.config', 'region.id', 'lmp'),
 
-	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env', 'REGION_ID',
-		'CLL'),
-	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env',
-		'DEFAULT_JURISDICTION', 'CLL'),
-	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env',
-		'FNPL_REGION_COUNTRY_CODE', 'CLL'),
+	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env', 'REGION_ID','CLL - old'),
+	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env',	'DEFAULT_JURISDICTION', 'CLL - old'),
+	new Regions('/Users/UUU/git.paylatergroup.com/code/Micro-Service-Consumer-Level-Lending-API/.env',	'FNPL_REGION_COUNTRY_CODE', 'CLL - old'),
 
-	new Regions('/Users/UUU/Pay Later Group/Micro-Service-Central/.env', 'REGION_ID', 'Central'),
+	new Regions('/Users/UUU/Pay Later Group/legacy/CLL/.env', 'REGION_ID','CLL - new'),
+	new Regions('/Users/UUU/Pay Later Group/legacy/CLL/.env', 'DEFAULT_JURISDICTION', 'CLL - new'),
+	new Regions('/Users/UUU/Pay Later Group/legacy/CLL/.env', 'FNPL_REGION_COUNTRY_CODE', 'CLL - new'),
+
+	new Regions('/Users/UUU/Pay Later Group/Micro-Service-Central/.env', 'REGION_ID', 'Central - old'),
+	new Regions('/Users/UUU/Pay Later Group/legacy/Central/.env', 'REGION_ID', 'Central - new'),
 
 	new Regions('/Users/UUU/Pay Later Group/application-widget/configuration.php', 'REGION_ID', 'widget'),
 
